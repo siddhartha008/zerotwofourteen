@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --font-cursive: 'Dancing Script', cursive;
+  --font-display: 'Quicksand', sans-serif;
+  
+  --color-pink-soft: #FFB6C1;
+  --color-pink-warm: #FF69B4;
+  --color-pink-deep: #FF1493;
+  --color-cream: #FFF5EE;
+  --color-night: #1a1a2e;
+  --color-night-lighter: #2a2a4e;
+  --color-star: #FFD700;
+  --color-moon: #F5F5DC;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-display antialiased;
+    overflow-x: hidden;
+  }
+}
