@@ -121,7 +121,7 @@ const JUMP_FORCE = -15;
 const MINIGAME_FLOWERS = [
   { x: 2900, y: 130, collected: false },  // Left
   { x: 3400, y: 150, collected: false },  // Middle
-  { x: 3900, y: 90, collected: false },  // End (right)
+  { x: 3900, y: 60, collected: false },  // End (right)
 ];
 const MINIGAME_OBSTACLES = [
   { x: 3000, width: 50, height: 35 },
