@@ -38,7 +38,7 @@ const STORY_SCENES = [
   {
     x: 1600,
     section: 'street',
-    context: "3 months later...",
+    context: "a few weeks later...",
     type: 'narration',
   },
   {
@@ -121,7 +121,7 @@ const JUMP_FORCE = -15;
 const MINIGAME_FLOWERS = [
   { x: 2900, y: 130, collected: false },  // Left
   { x: 3400, y: 150, collected: false },  // Middle
-  { x: 3900, y: 60, collected: false },  // End (right)
+  { x: 3900, y: 150, collected: false },  // End (right)
 ];
 const MINIGAME_OBSTACLES = [
   { x: 3000, width: 50, height: 35 },
@@ -259,6 +259,10 @@ export function SideScrollingGame() {
       // Check if all flowers collected - show message instead of immediately completing
       if (flowersCollected.every(f => f) && !minigameComplete && !showCompletionMessage) {
         setShowCompletionMessage(true);
+      }
+
+      // Auto-stop physics when complete and grounded
+      if (minigameComplete && playerY === 0) {
         setMinigameActive(false);
       }
     }, 16);
@@ -589,7 +593,7 @@ export function SideScrollingGame() {
     const interval = setInterval(() => {
       x += 4;
       setPlayerX(x);
-      if (x >= BOY_FINAL_POSITION - 80) {
+      if (x >= BOY_FINAL_POSITION - 30) {
         clearInterval(interval);
         setIsWalking(false);
         setGamePhase('celebration');
@@ -637,7 +641,7 @@ export function SideScrollingGame() {
       />
 
       {/* Parallax Background */}
-      <ParallaxBackground scrollX={cameraX} section={currentSection} />
+      <ParallaxBackground scrollX={cameraX} playerX={playerX} section={currentSection} />
 
       {/* World Elements */}
       <WorldElements scrollX={cameraX} worldWidth={WORLD_WIDTH} />
@@ -942,7 +946,7 @@ export function SideScrollingGame() {
           >
             <div className="bg-black/90 px-8 py-6 border-4 border-pink-400" style={{ boxShadow: '4px 4px 0 #FF1493' }}>
               <p className="text-pink-200 text-sm text-center leading-relaxed" style={{ fontFamily: "'Press Start 2P', cursive" }}>
-                And the rest is a magical history.
+                And the rest is a magical history and a magical future.
               </p>
             </div>
           </motion.div>
@@ -1016,7 +1020,7 @@ export function SideScrollingGame() {
                     src="/flower.png"
                     alt="Flowers"
                     style={{
-                      width: '140px',
+                      width: '120px',
                       height: 'auto',
                       imageRendering: 'pixelated'
                     }}
@@ -1055,12 +1059,12 @@ export function SideScrollingGame() {
         </AnimatePresence>
       )}
 
-      {/* Boy at the end (visible when approaching) */}
-      {playerX > BOY_FINAL_POSITION - 500 && gamePhase === 'playing' && !currentScene && (
+      {/* Boy at the end (visible when approaching or during finale) */}
+      {((playerX > BOY_FINAL_POSITION - 500 && gamePhase === 'playing' && !currentScene) || gamePhase === 'finale') && (
         <motion.div
           className="absolute z-10"
           style={{
-            left: BOY_FINAL_POSITION - cameraX,
+            left: gamePhase === 'finale' ? '50%' : BOY_FINAL_POSITION - cameraX,
             bottom: GROUND_LEVEL,
             transform: 'translateX(-50%)',
           }}
@@ -1167,20 +1171,7 @@ export function SideScrollingGame() {
         )}
       </AnimatePresence>
 
-      {/* Progress bar */}
-      <div className="absolute top-4 left-4 right-4 z-20">
-        <div className="bg-black/40 backdrop-blur-sm rounded-full h-2 overflow-hidden">
-          <motion.div
-            className="h-full bg-gradient-to-r from-pink-500 to-pink-400 rounded-full"
-            style={{ width: `${Math.min((playerX / FINAL_X) * 100, 100)}%` }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-        <div className="flex justify-between mt-1.5 px-1">
-          <span className="text-white/40 text-xs font-medium">2017</span>
-          <span className="text-white/40 text-xs font-medium">2026</span>
-        </div>
-      </div>
+
     </div>
   );
 }

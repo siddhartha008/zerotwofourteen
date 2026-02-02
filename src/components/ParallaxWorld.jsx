@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 // Parallax background layers for the side-scrolling world
-export function ParallaxBackground({ scrollX, section = 'school' }) {
+export function ParallaxBackground({ scrollX, playerX = 0, section = 'school' }) {
   // Different sections have different backgrounds
   const sections = {
     school: {
@@ -113,7 +113,7 @@ export function ParallaxBackground({ scrollX, section = 'school' }) {
     const YEARS_START = 4200;
     const YEARS_END = 6185;
     const yearsWidth = YEARS_END - YEARS_START;
-    const progress = Math.max(0, Math.min(1, (scrollX - YEARS_START) / yearsWidth));
+    const progress = Math.max(0, Math.min(1, (playerX - YEARS_START) / yearsWidth));
     // Slower, smoother fast-forward: 6 day/night cycles with eased transition
     const numCycles = 6;
     const cycle = progress * numCycles * 2; // 0 to 12 (6 day + 6 night)
@@ -123,6 +123,9 @@ export function ParallaxBackground({ scrollX, section = 'school' }) {
     const isDay = (cycle % 2) < 1;
     const dayStrength = isDay ? eased : (1 - eased);
     const nightStrength = 1 - dayStrength;
+
+    // Calculate current year based on progress (2019 -> 2022)
+    const currentYear = Math.min(2022, 2019 + Math.floor(progress * 4));
 
     return (
       <div className="absolute inset-0 overflow-hidden">
@@ -189,6 +192,23 @@ export function ParallaxBackground({ scrollX, section = 'school' }) {
           className="absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-[#1a1a2a] to-transparent"
           style={{ opacity: 0.6 + nightStrength * 0.4 }}
         />
+
+        {/* Dynamic Year Display */}
+        <div
+          className="absolute top-[20%] left-1/2 transform -translate-x-1/2 text-6xl md:text-8xl font-bold tracking-widest"
+          style={{
+            fontFamily: "'Press Start 2P', cursive",
+            color: isDay ? '#FFFFFF' : '#E6E6FA',
+            textShadow: isDay
+              ? '4px 4px 0 #4682B4, -2px -2px 0 #4682B4'
+              : '4px 4px 0 #483D8B, 0 0 20px rgba(255,255,255,0.5)',
+            opacity: 0.8,
+            transition: 'color 1s, text-shadow 1s',
+            zIndex: 20
+          }}
+        >
+          {currentYear}
+        </div>
       </div>
     );
   }

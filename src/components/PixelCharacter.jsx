@@ -23,12 +23,12 @@ export function PixelCharacter({
         ...style
       }}
       animate={{
-        y: state === 'walk' ? [0, -4, 0] : [0, -2, 0],
+        y: state === 'walk' ? [0, -4, 0, -4] : [0, -1, 0],
       }}
       transition={{
-        duration: state === 'walk' ? 0.4 : 2,
+        duration: state === 'walk' ? 0.3 : 2,
         repeat: Infinity,
-        ease: "easeInOut"
+        ease: state === 'walk' ? "linear" : "easeInOut"
       }}
     >
       <img
